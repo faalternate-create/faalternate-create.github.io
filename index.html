@@ -1,16 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElevenLabs Agent Widget</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ElevenLabs Agent — Demo</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <h1>Welcome to the ElevenLabs Widget Page</h1>
-    <div id="widget-container">
-        <script src="https://cdn.elevenlabs.io/widget.js"></script>
-        <elevenlabs-agent widget-id="your-widget-id-here"></elevenlabs-agent>
+  <header class="site-header">
+    <div class="wrap">
+      <h1 class="brand">faalternate • ElevenLabs Demo</h1>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#widget">Widget</a>
+        <a href="#about">About</a>
+      </nav>
     </div>
+  </header>
+
+  <main class="wrap main">
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Bring voice agents to your site</h2>
+        <p class="lead">A small demo page embedding the ElevenLabs agent widget. Replace the widget-id with your widget's ID to see it live.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#widget">Open the widget</a>
+          <a class="btn ghost" href="https://elevenlabs.io" target="_blank" rel="noopener">ElevenLabs</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone-mock">
+          <div class="screen" id="widget-preview">Loading widget preview…</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="cards">
+      <article class="card">
+        <h3>Responsive</h3>
+        <p>Looks good on phones, tablets, and desktops. The widget will center inside the demo phone frame.</p>
+      </article>
+      <article class="card">
+        <h3>Accessible</h3>
+        <p>Keyboard focus styles and ARIA-friendly structure so screen readers can navigate the page.</p>
+      </article>
+      <article class="card">
+        <h3>Safe to test</h3>
+        <p>No secret keys are stored here — just a client-side widget include. Replace the placeholder id with your widget id.</p>
+      </article>
+    </section>
+
+    <section id="widget" class="widget-area">
+      <h2>Agent widget</h2>
+      <p class="muted">If the widget script or widget-id is missing you will see a friendly fallback below.</p>
+
+      <div class="widget-card">
+        <div id="widget-container">
+          <!-- Vendor script: loads the elevenlabs widget element -->
+          <script src="https://cdn.elevenlabs.io/widget.js" onerror="window.__EL_WIDGET_LOAD_ERROR = true"></script>
+
+          <!-- Replace the placeholder with your real widget id -->
+          <elevenlabs-agent widget-id="your-widget-id-here"></elevenlabs-agent>
+
+        </div>
+
+        <div id="widget-fallback" class="fallback" hidden>
+          <strong>Widget not available.</strong>
+          <p class="muted">Possible reasons: missing/invalid widget-id, network block on the vendor CDN, or the widget requires additional configuration. Check the browser console for details.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <h2>About this demo</h2>
+      <p class="muted">This page is a small static demo to show the ElevenLabs agent embedded in a simple, modern layout. Feel free to customize the styles or content — I made up the copy for now.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <small>© 2025 faalternate-create — Demo page. Hosted on GitHub Pages.</small>
+    </div>
+  </footer>
+
+  <script>
+    // Simple script to reveal a fallback message if the vendor script fails or if the custom element isn't defined
+    function checkWidget() {
+      const fallback = document.getElementById('widget-fallback');
+      const container = document.getElementById('widget-container');
+      // If the vendor script failed to load
+      if (window.__EL_WIDGET_LOAD_ERROR) {
+        container && container.setAttribute('aria-hidden', 'true');
+        fallback && fallback.removeAttribute('hidden');
+        console.warn('ElevenLabs widget script failed to load.');
+        return;
+      }
+      // If element isn't upgraded after a short timeout, show fallback
+      setTimeout(() => {
+        const el = document.querySelector('elevenlabs-agent');
+        if (!el || window.customElements && !customElements.get('elevenlabs-agent')) {
+          container && container.setAttribute('aria-hidden', 'true');
+          fallback && fallback.removeAttribute('hidden');
+          console.info('ElevenLabs custom element not registered yet or widget-id missing.');
+        }
+      }, 1200);
+    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') checkWidget();
+    else document.addEventListener('DOMContentLoaded', checkWidget);
+  </script>
 </body>
 </html>
